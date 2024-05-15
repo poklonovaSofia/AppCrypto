@@ -111,10 +111,11 @@ export default {
       }
       else console.log("Can't");
     },
-    profileMode() {
+    async profileMode() {
      /* localStorage.removeItem('userToken');
       this.token = '';
       router.push("/signIn");*/
+      await router.push("/profile");
 
 
     },
@@ -198,7 +199,7 @@ export default {
 
 
 <style scoped>
-
+@import "../style.css";
 .container2{
   min-height: 100vh;
   background-color: #c5c3c3;

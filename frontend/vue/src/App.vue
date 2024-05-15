@@ -1,8 +1,10 @@
 <template>
-  <div id="app">
-    <!-- Заголовок чи інші елементи вашого додатку -->
-    <router-view></router-view>
+
+  <div class="app">
+      <router-view id ="router-view"/> <!-- Тут будуть рендеритись компоненти, що відповідають поточному маршруту -->
+
   </div>
+
 </template>
 
 <script>
@@ -13,5 +15,5 @@ export default {
 </script>
 
 <style>
-/* Стилі для вашого додатку */
+
 </style>
