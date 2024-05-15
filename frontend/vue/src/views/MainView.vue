@@ -98,7 +98,7 @@ export default {
       this.timePassed=false;
       if (typeof Worker !== 'undefined') {
         const worker = new Worker("@../workers/workerCalculateSave.js");
-        worker.postMessage({initialValue: this.coin.rate, hours: 1, savings_id: savings.id});
+        worker.postMessage({initialValue: this.coin.rate, end_at: savings.end_at, savings_id: savings.id});
         worker.onmessage = (event) => {
           const {data} = event;
           this.sum = data.sum;

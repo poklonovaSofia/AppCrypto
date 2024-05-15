@@ -2,21 +2,19 @@ import axios from "axios";
 let sum = 0;
 let step = 0;
 let timePassed = false;
-let endTime = new Date();
+let end_at_time = new Date();
 let id=0;
 
 self.onmessage = (event) => {
-    const { initialValue, hours, savings_id } = event.data;
+    const { initialValue, end_at, savings_id } = event.data;
     step = initialValue;
     id=savings_id;
-    const now = new Date();
-    endTime = now.getTime() + (hours * 60 * 60 * 1000);
+    end_at_time=end_at;
 };
 
 const intervalId = setInterval(() => {
     const now = new Date();
-
-    if (now.getTime() >= endTime) {
+    if (now.getTime() >= end_at_time) {
         clearInterval(intervalId);
         timePassed = true;
         console.log('Воркер завершив роботу');
