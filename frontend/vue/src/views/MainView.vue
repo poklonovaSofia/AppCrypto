@@ -67,7 +67,7 @@ export default {
         id: "",
         rate: ""
       },
-      countInDollars: '',
+      countInDollars: 0,
       tempBalance: 0.0000,
       timePassed: false,
       end_at: "Filled"
@@ -90,6 +90,10 @@ export default {
       const response = await axios.post("http://localhost:8080/api/history/start/savings", req)
       if(response.data)
       {
+        this.tempBalance = response.data.tempBalance;
+        this.end_at = new Date(response.data.end_at); // Перетворення рядка дати у Date об'єкт
+        this.end_at = "Until " + this.end_at.toLocaleString();
+        this.timePassed=false;
         this.startWorker(response.data);
       }
     },
@@ -98,7 +102,7 @@ export default {
       this.timePassed=false;
       if (typeof Worker !== 'undefined') {
         const worker = new Worker("@../workers/workerCalculateSave.js");
-        worker.postMessage({initialValue: this.coin.rate, end_at: savings.end_at, savings_id: savings.id});
+        worker.postMessage({initialValue: this.coin.rate, end_at: new Date(savings.end_at), savings_id: savings.id});
         worker.onmessage = (event) => {
           const {data} = event;
           this.sum = data.sum;
@@ -135,25 +139,22 @@ export default {
 
             if (balanceResponse.data === 0) {
               this.usersBalance.balance = 0;
-              this.coin.id = 0;
+              this.coin.id = 1;
               this.coin.name = "sBP5";
             } else {
               this.usersBalance = balanceResponse.data;
               this.coin.id = balanceResponse.data.coin.id;
               this.coin.name = balanceResponse.data.coin.name;
+              const priceResponse = await axios.get(`http://localhost:8080/api/coin/${this.coin.id}/rate`, {
+                headers: {
+                  Authorization: `Bearer ${this.token}`
+                }
+              });
+              console.log(priceResponse.data.coin);
+              this.coin.rate = priceResponse.data.rate;
+              this.coin.id = priceResponse.data.coin.id;
+              this.countInDollars = this.coin.rate * this.usersBalance.balance;
             }
-
-            const priceResponse = await axios.get(`http://localhost:8080/api/coin/${this.coin.id}/rate`, {
-              headers: {
-                Authorization: `Bearer ${this.token}`
-              }
-            });
-
-            console.log(priceResponse.data.coin);
-            this.coin.rate = priceResponse.data.rate;
-            this.coin.id = priceResponse.data.coin.id;
-
-            this.countInDollars = this.coin.rate * this.usersBalance.balance;
           }
         } catch (error) {
           console.error('Error fetching user data:', error);
@@ -170,9 +171,9 @@ export default {
           if (response.data === null) {
             this.timePassed = true;
           } else {
-
             this.tempBalance = response.data.tempBalance;
-            this.end_at = "Until " + response.data.end_at;
+            this.end_at = new Date(response.data.end_at); // Перетворення рядка дати у Date об'єкт
+            this.end_at = "Until " + this.end_at.toLocaleString();
             this.timePassed=false;
             await this.startWorker(response.data);
           }

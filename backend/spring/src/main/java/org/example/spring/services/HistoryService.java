@@ -23,7 +23,7 @@ public class HistoryService {
         return historyRepository.findByUserIdAndCoinId(savingsRequest.getUser_id(), savingsRequest.getCoin_id());
     }
 
-    public Long addSavings(AddSavingsRequest addSavingsRequest) {
+    public Savings addSavings(AddSavingsRequest addSavingsRequest) {
         Savings savings = new Savings();
         Coin coin = new Coin();
         coin.setId(addSavingsRequest.getCoin_id());
@@ -39,7 +39,7 @@ public class HistoryService {
         calendar.add(Calendar.HOUR_OF_DAY, addSavingsRequest.getDuration());
         savings.setEnd_at(calendar.getTime());
         historyRepository.save(savings);
-        return savings.getId();
+        return savings;
     }
 
     public Long updateSavings(UpdateSavingsRequest updateSavingsRequest) {

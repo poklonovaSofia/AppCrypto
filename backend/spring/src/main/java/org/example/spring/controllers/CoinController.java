@@ -26,7 +26,7 @@ public class CoinController {
     @GetMapping("/{coinId}/rate")
     public ResponseEntity<?> getCoinRate(@PathVariable Long coinId) {
         try {
-            // Отримати тариф за coinId
+
             Coins_rates coinRate = coinService.getCoinRateByCoinId(coinId);
             if (coinRate != null) {
                 return ResponseEntity.ok(coinRate);

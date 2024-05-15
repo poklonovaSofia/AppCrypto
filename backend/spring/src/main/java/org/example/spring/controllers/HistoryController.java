@@ -26,8 +26,8 @@ public class HistoryController {
     public ResponseEntity<?> addSavings(@RequestBody AddSavingsRequest addSavingsRequest)
     {
         try{
-            Long id = historyService.addSavings(addSavingsRequest);
-            return ResponseEntity.ok(id);
+            Savings savings = historyService.addSavings(addSavingsRequest);
+            return ResponseEntity.ok(savings);
         }catch(Exception ex)
         {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
