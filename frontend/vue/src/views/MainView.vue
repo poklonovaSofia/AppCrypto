@@ -12,7 +12,8 @@
       </div>
       <div class="user text-center">
         <div class="profile">
-          <img src="../styles/noname.jpg" class="rounded-circle" width="80">
+          <img src="../styles/noname.jpg" class="rounded-circle"  v-if="!avatarUrl">
+          <img :src="avatarUrl" class="rounded-circle"    v-else>
         </div>
       </div>
       <div class="mt-5 text-center">
@@ -70,7 +71,8 @@ export default {
       countInDollars: 0,
       tempBalance: 0.0000,
       timePassed: false,
-      end_at: "Filled"
+      end_at: "Filled",
+      avatarUrl: ''
 
     };
   },
@@ -101,7 +103,7 @@ export default {
     {
       this.timePassed=false;
       if (typeof Worker !== 'undefined') {
-        const worker = new Worker("@../workers/workerCalculateSave.js");
+        const worker = new Worker("@/workers/workerCalculateSave.js");
         worker.postMessage({initialValue: this.coin.rate, end_at: new Date(savings.end_at), savings_id: savings.id});
         worker.onmessage = (event) => {
           const {data} = event;
@@ -131,7 +133,18 @@ export default {
           if (response.data === "token") {
             router.push("/signIn");
           } else {
+            console.log(response.data);
             this.userData = response.data;
+            const avatar = await axios.get(`http://localhost:8080/api/files/${this.userData.id}`, {
+              headers: {
+                Authorization: `Bearer ${this.token}`
+              }
+            });
+            if(avatar.data)
+            {
+              const fileUrl = await avatar.data.urlPath;
+              this.avatarUrl = fileUrl;
+            }
             const balanceResponse = await axios.get(`http://localhost:8080/api/user/${this.userData.id}/balance`, {
               headers: {
                 Authorization: `Bearer ${this.token}`

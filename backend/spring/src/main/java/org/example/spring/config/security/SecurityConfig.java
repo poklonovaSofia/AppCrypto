@@ -36,8 +36,9 @@ public class SecurityConfig {
                         .requestMatchers("/ab", "/api/user").permitAll()
                         .requestMatchers("/about").permitAll()
                         .requestMatchers("/api/user/{user_id}/balance", "/api/coin/{coinId}/rate").permitAll()
-                        .requestMatchers("/api/signUp").permitAll()
-                        .requestMatchers("/api/signIn").permitAll()
+                        .requestMatchers("/api/signUp", "/api/update").permitAll()
+                        .requestMatchers("/api/signIn", "api/files/full").permitAll()
+                        .requestMatchers("/api/files/{user_id}", "/api/files", "api/files/temp", "api/files/delete").permitAll()
                         .requestMatchers("/api/history/savings", "/api/history/start/savings", "/api/history/update/savings").permitAll()
                         .anyRequest().authenticated()
                 );

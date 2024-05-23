@@ -28,4 +28,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public void updateUser(UserDto userDto) throws Exception {
+        User user = userRepository.findById(userDto.getId())
+                .orElseThrow(() -> new Exception("User not found with id: " + userDto.getId()));
+        user.setUsername(userDto.getUsername());
+        user.setEmail(userDto.getEmail());
+        userRepository.save(user);
+    }
 }

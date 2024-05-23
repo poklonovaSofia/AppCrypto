@@ -46,6 +46,18 @@ public class UserController {
             return ResponseEntity.ok().body(ex.toString());
         }
     }
+    @PostMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody UserDto userDto) {
+        try {
+            System.out.println("hi:" + userDto.toString());
+            userService.updateUser(userDto);
+
+            return ResponseEntity.ok("Success");
+        } catch(Exception ex)
+        {
+            return ResponseEntity.ok().body(ex.toString());
+        }
+    }
     @GetMapping("/user")
     public ResponseEntity<?> getUserData(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.substring(7);
